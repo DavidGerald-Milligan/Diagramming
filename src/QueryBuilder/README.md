@@ -5,7 +5,6 @@
  ![Visitor](./Visitor.png)
 
 # FilterFactory  
-####This produces the VISITABLE filter.  
  ![Filter](./Filter.png)
 
 # MatcherQuery  
