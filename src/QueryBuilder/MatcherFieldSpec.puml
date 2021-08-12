@@ -3,7 +3,7 @@
 interface MatcherFieldSpec { 
     Stream<FieldValue> getFieldValues(document)
 }
-note left of MatcherFieldSpec
+note right of MatcherFieldSpec
     Interface to load field values
 end note
 
@@ -12,7 +12,7 @@ class FieldNameMatcherFieldSpec implements MatcherFieldSpec {
     + FieldNameMatcherFieldSpec(fieldName)
     + Stream<FieldValue> getFieldValues(document)
 }
-note left of FieldNameMatcherFieldSpec
+note right of FieldNameMatcherFieldSpec
     Simple class to return field values in a document
 end note
 @enduml

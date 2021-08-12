@@ -3,7 +3,7 @@ interface FilterVisitor<T> {
     void visitEquals(T, value)
     void otherVisitMethods(Object ... o)
 }
-note left of FilterVisitor
+note right of FilterVisitor
     just defining visitEquals for simplicity
 end note
 

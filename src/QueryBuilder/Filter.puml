@@ -14,9 +14,9 @@ class FilterFactory {
     + Filter<T> equals(T, value)
 }
 note left of FilterFactory
-    methods that return a lambda expression;
+    Contains methods that return a lambda expression;
         
-    visitor -> visitor.visitEquals(fieldSpec, value)
+    visitor -> visitor.visitEquals(T, value)
     
 end note
 FilterFactory -- Filter : builds Filter<T>
