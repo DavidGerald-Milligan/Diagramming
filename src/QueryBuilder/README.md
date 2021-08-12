@@ -1,7 +1,7 @@
 # MatcherFieldSpec  
  ![MatcherFieldSpec](./MatcherFieldSpec.png)
 
-# Visitor  
+# MatcherQueryVisitor  
  ![Visitor](./Visitor.png)
 
 # Filter  
