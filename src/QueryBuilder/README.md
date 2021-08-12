@@ -12,6 +12,7 @@
  ![Query](./Query.png)
  
 # FilterMapper  
+
 #### This produces the VISITABLE filter of the required type.  
   ![FilterMapper](./FilterMapper.png)
   
