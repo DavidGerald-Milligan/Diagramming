@@ -1,0 +1,19 @@
+@startuml
+class FilterMapper<T, R> {
+    - FilterMapperVisitor<T, R> visitor
+    + Filter<R> map(Filter<T> filter, Function<T, R> mapper)
+}
+note left of FilterMapper
+    Takes a Filter of T and maps it to a filter R.
+end note
+
+class FilterMapperVisitor<T, R> {
+    - Function<? super T, ? extends R> mapper;
+    - Filter<R> result;
+    + Filter<R> getResult()
+}
+note left of FilterMapperVisitor
+    Takes a Filter of T and maps it to a filter R.
+end note
+FilterMapper *-- FilterMapperVisitor
+@enduml
