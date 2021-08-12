@@ -1,0 +1,40 @@
+@startuml
+start
+note left
+A document exists
+With repo == sharepoint
+Is head of family
+Not yet tagged to a datasource
+end note
+note right
+A datasource exists
+For repo == sharepoint
+end note
+repeat : once a day;
+note right
+For all tenants
+Apply datasource tag
+to untagged families
+end note
+:Build ES query;
+note right
+Where repo == sharepoint
+And is head of family
+AND EITHER
+Not already tagged with DS == 1
+Or
+Has children not already tagged
+with DS == 1
+end note
+:Call Legacy Tagging Job;
+repeat while (sleep);
+note left
+Our doc and all children are tagged
+if not already tagged
+end note
+:New child doc added to our doc;
+note left
+New doc will now get tagged
+on next run.
+end note
+@enduml

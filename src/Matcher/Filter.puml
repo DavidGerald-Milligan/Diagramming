@@ -1,0 +1,24 @@
+@startuml
+
+interface Filter<T> {
+    void accept(FilterVisitor<T> visitor);
+}
+note left of Filter
+    The Filter is the VISITABLE object 
+    that defines a functional interface
+    
+    It is VISITED by the FilterVisitor
+end note
+
+class FilterFactory {
+    + Filter<T> equals(T, value)
+}
+note left of FilterFactory
+    methods that return a lambda expression;
+        
+    visitor -> visitor.visitEquals(fieldSpec, value)
+    
+end note
+FilterFactory -- Filter : builds Filter<T>
+
+@enduml

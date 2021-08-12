@@ -1,0 +1,21 @@
+
+@startuml
+folder [<b>sample_data]
+folder Branding
+folder Engineering
+folder "back-end"
+folder "front-end"
+folder ops
+folder Global_communication
+folder HR
+folder To_be_sorted
+sample_data -- Branding
+sample_data -- Engineering
+sample_data -- Global_communication
+sample_data -- HR
+sample_data -- To_be_sorted
+Engineering -- "back-end"
+@enduml
+
+
+

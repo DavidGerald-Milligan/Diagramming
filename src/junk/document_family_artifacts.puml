@@ -1,0 +1,11 @@
+@startuml
+pst-->email : contains
+note left : pst: {tag:WORKBOOK_1, sources:{spreadsheet, image}}
+email->word_doc : contains
+note left : email: {tag:WORKBOOK_1, sources:{spreadsheet, image}}
+word_doc->spreadsheet : contains
+note left : word_doc: {tag:WORKBOOK_1, sources:{spreadsheet, image}}
+word_doc->image : contains
+note left: spreadsheet: {tag:WORKBOOK_1, sources:{spreadsheet}}
+note right: image: {tag:WORKBOOK_1, sources:{image}}
+@enduml

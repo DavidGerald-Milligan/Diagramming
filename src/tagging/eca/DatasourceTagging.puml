@@ -1,0 +1,89 @@
+@startuml
+
+boundary ECA as ECA
+participant DataResource as DR order 5
+participant CaseResource as CR order 6
+participant ResearchWorkspaceResource as RWR order 8
+participant DatasourceService as DS order 10
+participant ContentUpdater.TenantUpdater as TU order 20
+participant TaggingService as TS order 30
+participant UtilityService as US order 40 #Red
+participant Analytics as A order 50 #Red
+boundary TagService as TSS order 60 #Red
+boundary TaggingService as TSSApp order 61  #Red
+boundary JobService as JSS order 100
+boundary TaggingBatchWorker as TBW order 101 #Red
+boundary SearchAndAnalytics as SA order 102 #Red
+boundary ElasticQueryWorker as EQ order 110 #Green
+boundary ElasticIndexing as EI order 120 #Green
+boundary Elasticsearch as ES order 130
+
+ECA --> DR
+activate DS
+DR --> DS : createDataSource()
+ECA --> RWR
+RWR --> DS : createDataSource()
+ECA --> CR
+CR --> DS : createDataSource()
+activate TS
+loop on tenants
+loop on datasources
+TU -> TS : tagFamilies
+end loop
+end loop
+DS -> TS : tagFamilies()
+
+== Old ==
+TS --> DS : getDatasourceQuery()
+activate DS
+DS --> TS : qstmt
+deactivate DS
+TS --> US : appendDocumentDeltaClause
+note over US : appends (datasource <> \\"334\\")
+activate US
+note over TS:     "(((datasource <> \\"334\\")) AND ((repository_id IN 264)) AND is_head_of_family == true",
+US --> TS : qstmt
+deactivate US
+TS --> A : documentSearch()
+activate A
+note over TS: return if no results
+A --> TS : searchResult
+deactivate A
+TS --> TSS : Tag datasource
+TSS --> TSSApp : Tag Datasource
+TSSApp --> JSS : Tag Datasource
+JSS --> TBW : Tag Datasource
+TBW --> SA : Tag Datasource
+SA --> ES : Tag Datasource
+TS --> DS :  add jobid
+TS --> TSS : Tag case
+TS --> DS :  add jobid
+TSS --> TSSApp : Tag case
+TSSApp --> JSS : Tag case
+JSS --> TBW : Tag case
+TBW --> SA : Tag case
+SA --> ES : Tag case
+
+== New ==
+TS -[#Green]-> DS : getRepositoryIds()
+activate DS
+DS -[#Green]-> TS : repositoryIds
+deactivate DS
+TS -[#Green]-> TS : Build new Job
+note over TS
+Build job with datasource and repo getRepositoryIds
+end note
+TS -[#Green]-> JSS : Tag case and datasource in one job
+TS --> DS : add jobId
+deactivate TS
+JSS --> EQ : RabbitMQ
+activate EQ
+EQ --> ES : query docs
+ES --> EQ : docs if exists
+note over EQ
+if no results will do nothing.
+end note
+EQ --> EI : RabbitMQ
+deactivate EQ
+EI --> ES : update vis Painless
+@enduml

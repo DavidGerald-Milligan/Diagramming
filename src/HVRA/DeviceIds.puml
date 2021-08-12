@@ -1,0 +1,38 @@
+@startuml
+boundary USER order 1
+boundary DAppResources order 10
+boundary DB order 20
+boundary TargetQueue order 25
+
+USER -> DAppResources: assignDeviceIds
+note right USER
+params: tenantId == null ? all : one
+end note
+
+DAppResources --> DB: getRepositories()
+note right DAppResources
+Could be all tenants?
+end note
+DAppResources <-- DB: List<Repos>
+
+DAppResources --> DB: getDevices()
+note right DAppResources
+Could be all tenants?
+end note
+DAppResources <-- DB: List<Device>
+
+DAppResources --> DAppResources: Build results
+
+DAppResources --> TargetQueue
+note right TargetQueue
+{
+    "RESULT": {
+      "tenant-1": {
+        "1: 2,
+        "3": 4,
+      }
+      ...
+     }
+}
+end note
+@enduml

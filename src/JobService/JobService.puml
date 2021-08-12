@@ -1,0 +1,43 @@
+@startuml
+boundary USER order 1
+boundary JobService order 5
+boundary DAppResources order 10
+
+boundary CafAppResources order 15
+boundary DB order 17
+boundary WorkflowWorker order 18
+boundary QueryWorker order 20
+
+boundary ArchiveCleanupWorker order 25
+boundary ElasticIndexer order 27
+boundary ElasticSearch order 30
+
+
+USER -> JobService: Create Job
+note right USER
+Create some job with whatever params
+end note
+
+JobService --> JobService
+note right JobService
+Build a task document
+end note
+
+JobService --> DAppResources
+DAppResources --> CafAppResources
+DAppResources <-- CafAppResources
+CafAppResources --> DB
+CafAppResources <-- DB
+note right DAppResources
+Update a task document
+end note
+DAppResources --> QueryWorker
+QueryWorker --> WorkflowWorker: workflowName=archive-cleanup-workflow,
+WorkflowWorker --> ArchiveCleanupWorker
+WorkflowWorker --> ElasticIndexer
+ElasticIndexer --> ElasticSearch
+ElasticSearch --> ElasticSearch: Updates document
+note right ElasticSearch
+Also invokes painless scripts
+end note
+@enduml

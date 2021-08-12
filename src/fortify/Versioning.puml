@@ -1,0 +1,14 @@
+@startuml
+participant VersionComparator as VC order 100
+participant ArtifactProcessor as AP order 90
+participant JavaAppCollector as JAC order 80
+JAC --> AP : getResolvedArtifacts
+activate AP
+AP --> AP : getResolvedArtifacts
+AP --> AP : resolveArtifactsByVersion
+AP --> AP : getHighestVersionPerArtifact
+AP --> VC : Compare Versions
+deactivate AP
+
+
+@enduml

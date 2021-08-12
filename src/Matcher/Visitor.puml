@@ -1,0 +1,26 @@
+@startuml
+interface FilterVisitor<T> {
+    void visitEquals(T, value)
+    void otherVisitMethods(Object ... o)
+}
+note left of FilterVisitor
+    just defining visitEquals for simplicity
+end note
+
+class MatcherQueryVisitor<MatcherFieldSpec> implements FilterVisitor {
+    - Document document
+    - boolean isMatch
+    + void visitEquals(MatcherFieldSpec, value)
+    + void otherVisitMethods(Object ... o)
+    + boolean getResult()    
+    - Stream<FieldValue> getFieldValues(MatcherFieldSpec)
+}
+note right of MatcherQueryVisitor
+    This is the VISITOR object which visits
+    a VISITABLE Filter.
+    
+    visitEquals() calls getFieldValues and then checks if a
+    value matches
+end note
+
+@enduml

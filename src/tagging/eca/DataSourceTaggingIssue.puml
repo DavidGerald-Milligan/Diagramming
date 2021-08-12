@@ -1,0 +1,38 @@
+@startuml
+start
+note left
+A document exists
+With repo == sharepoint
+Is head of family
+Not yet tagged to a datasource
+end note
+note right
+A datasource exists
+For repo == sharepoint
+end note
+repeat : once a day;
+note right
+For all tenants
+Apply datasource tag
+to untagged families
+end note
+:Get me documents;
+note right
+Where repo == sharepoint
+And Not already tagged with DS == 1
+And is head of family
+end note
+repeat : for each doc;
+:Call Tag Service;
+repeat while (has more doc) is (yes);
+repeat while (sleep);
+note left
+Our doc and all children are tagged
+end note
+:New child doc added to our doc;
+note left
+New doc never gets tagged because
+the head of family is already tagged
+which precludes it from the daily operation.
+end note
+@enduml

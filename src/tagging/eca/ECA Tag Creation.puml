@@ -1,0 +1,51 @@
+@startuml
+boundary TagService as TS  order 20
+participant DatasourceService as DS order 10
+participant TagWrapper as TR order 15
+boundary ECA as ECA  order 18
+participant TagsApi as TAPI order 25
+participant TagsApiService as TAPIS order 30
+participant TagRepository as TREPO order 35
+
+boundary AppResources as AR  order 50
+
+DS --> TR : createEntity(TaggableEntity)
+
+TR --> TAPI : addTag((TagToCreate)TaggableEntity)
+TAPI --> TAPIS : addTag(TagToCreate)
+TAPIS --> TREPO : createTag(TagToCreate)
+activate TREPO
+
+TR --> TAPI : updateTag((TagToUpdate)TaggableEntity)
+TAPI --> TAPIS : updateTag(TagToUpdate)
+TAPIS --> TREPO : updateTag(TagToUpdate)
+
+activate TREPO
+TREPO --> TREPO : getTag(TagToCreate) 
+note left
+Creates/Updates a Tag
+Copies attributes to Tag attributes
+Sets Tag::active as well 
+from TagToCreate::active(default-true)
+end note
+TREPO --> TREPO : creates a TagEntity(Tag)
+TREPO --> TREPO : TagEntity.getEntity()
+note left
+Creates/Updates an Entity from the Tag
+Copies Tag::active to Entity attributes
+end note
+TREPO --> AR : create/update the Entity
+AR --> TREPO : created/updated entity
+TREPO --> TREPO : sets the entity a tagEntity.setEntity(entity)
+note left
+Refreshes the tag from the entity
+tag.setActive(entity.attributes.get(active)) 
+removes active from the attributes.
+
+Reason for this is that we dont want the same value in two places.
+end note
+
+deactivate TREPO
+deactivate TREPO
+TREPO --> TAPIS
+@enduml

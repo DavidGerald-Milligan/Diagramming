@@ -1,0 +1,37 @@
+@startuml
+start
+    :Protect Document Family;
+      :Send to Encryption Workflow;
+      #red:if (Document has HOLD?) then (no)
+        :Send to Archive Cleanup Worker;
+      endif
+      :Send to Elastic Indexing Worker;
+      #palegreen:if (Document has ARCHIVE_ID?) then (yes)
+        if (Archive Failures Present?) then (yes)
+            :Add each failure to index;
+        else (no)            
+            #pink:if (ACW invoked) then (yes)                  
+                :Create a failure;
+            endif
+        endif
+      endif
+      #lightblue:if (ACW invoked) then (yes)
+        :Remove ARCHIVE_ID;
+        #orange:if (Index has Holds) then (yes)   
+            #orange:Add Broken Hold Failure;
+            #orange: Remove Holds;
+        endif
+        :Remove Export Fields;
+      endif   
+      :Remove Content;
+      :Reset Collection Status;
+      
+      :Remove Entity Matches;
+      :Reset Enrichment Status;
+      :Update PROTECTION_STATE;
+      :Update PROTECTION_HISTORY;
+stop
+
+
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+boundary ECA as ECA order 1
+boundary AJP as AJP order 21
+boundary TagService as TS order 23
+boundary JobService as JS order 25
+boundary Analytics as SA order 20
+
+note right ECA
+Release holds in a workspace with a specific hold ID
+end note
+note right ECA
+Queries Analytics 
+using qstmt STRING_HOLD==*
+end note
+ECA --> SA: query for matching docs
+ECA <-- SA: query results
+note right ECA
+Now call AJP using same qstmt 
+to remove the hold tag
+end note
+ECA --> AJP: /ajp/v1/actions/release
+AJP --> TS: /tag-service/v1/tags/remove
+TS --> JS: legacy-tagging-job
+note right ECA #orange
+Untag Job ID not returned
+end note
+ECA <-- AJP
+ECA --> TS:Update the hold entity
+== New ==
+AJP --> JS: releasedHoldCleanupJob(caseId)
+note right AJP #palegreen
+Create a new job that takes caseId
+queries for:
+    WORKSPACE_ID
+    NOT EXISTS HOLD
+    EXISTS PROTECTION_STATE.encrypted
+    EXISTS ARCHIVE_ID
+    COLLECTION_STATUS != COLLECTED
+
+With prereq of removeTags job
+Forwards to archive-cleanup-workflow   
+end note
+@enduml

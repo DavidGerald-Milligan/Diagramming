@@ -1,0 +1,46 @@
+@startuml
+scale 600 width
+start
+:create tagging operation;
+:add tags with metadata;
+repeat : for each source document to tag;
+    :identify shard for document;
+    :extract with ids from family id path;
+    repeat : get id;
+        :create sub operation for id;
+        :add shard;
+        :add required tag ids;
+        :add source id;
+    repeat while(has more ids) is (yes);
+repeat while(has more documents to tag);
+
+:send operation to Elasticsearch;
+
+end
+
+start
+note: on Elasticsearch;
+:load stored Painless script;
+repeat : for each suboperation;
+    :extract tag metadata;
+    :load document from specified shard;
+    repeat : for each tag;
+        if (tag exists) then (no)
+            :apply tag;
+            :apply source;
+        else (yes)
+            if (source exists) then (no)
+                :apply source;
+            else (yes)
+                :skip;
+            endif
+        endif
+    repeat while (has more tags) is (yes);
+    if (is document updated) then (yes)
+        :reindex document;
+    else (no)
+        :skip;
+    endif
+repeat while (has more operations);
+end
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+scale 600 width
+title Old Tag Family Ancestors
+
+package "Data Discovery" {
+    [Find document] --> [Get Family ID Path]
+    [Find document] --> [Add Tag]
+    [Find document] --> [Create update ]
+}
+
+cloud "Elasticsearch" {
+
+}
+
+[Add Tag] --> Elasticsearch
+
+@enduml

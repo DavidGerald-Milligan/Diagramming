@@ -1,0 +1,6 @@
+@startuml
+pst-->email : contains
+email->word_doc : contains
+word_doc->spreadsheet : contains
+word_doc->image : contains
+@enduml

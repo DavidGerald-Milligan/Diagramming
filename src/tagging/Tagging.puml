@@ -1,0 +1,52 @@
+@startuml
+[Agent] as A
+[Tag Service Swagger UI] as SUI
+[ECA] as ECAUI
+[ECA] as ECAWB
+[Classification] as C
+[(Legacy) Tag Service] as TS
+[Job Service] as JS
+[Worker Elastic Indexing] as EI
+[Worker Elastic Query] as EQ
+[Elasticsearch] as ES
+
+note left of A #aaffaa
+  Reingestion
+end note
+note right of SUI #FFAAAA
+  Tag CRUD Operations
+end note
+note right of ECAWB #aqua
+  Periodic updates of 
+  Dynamic / Automatic
+  Workbook
+  (only when new documents found)
+end note
+note right of C #aaffaa
+  calls status-updated-script
+  automatic/dynamic tags only
+end note
+note left of ECAUI #aqua
+  Periodic updates of 
+  Manual
+  Datascource
+  Case
+  (only when untagged documents found)
+end note
+note right of ECAUI #FFAAAA
+  Tag CRUD Operations
+end note
+note left of TS #aab5ff
+  calls legacy-tagging-job
+end note
+
+SUI --> TS
+ECAUI --> TS
+TS --> JS
+JS --> EQ
+EQ --> EI
+EI --> ES
+ECAWB -l-> TS
+A --> C
+C -l-> EI
+@enduml

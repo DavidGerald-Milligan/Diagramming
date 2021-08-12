@@ -1,0 +1,30 @@
+@startuml
+start
+note
+tag-service
+    Never really fulfilled expectation
+Replace:
+    tagging-service
+    tagging-worker
+    tagging-batch-worker
+end note
+
+note
+Created new tagging job
+    More descriptive tagging
+    Bulk tagging
+Created legacy tagging job
+Short circuited and removed:
+    tagging-service
+    tagging-worker
+    tagging-batch-worker
+with call from tag-service
+to legacy tagging job.
+end note
+
+note
+Fixed issue with ECA
+    Called legacy tagging job
+    Used Elasticquery syntax
+end note
+@enduml

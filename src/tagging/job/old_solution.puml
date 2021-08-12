@@ -1,0 +1,15 @@
+@startuml
+scale 600 width
+start
+
+repeat : for each document to tag;
+    :extract with ids from family id path;
+    repeat : get id;
+        :create tagging operation;
+        :add tags;
+        :send operation to Elasticsearch;
+        :Elasticsearch updates document;
+    repeat while(has more ids) is (yes);
+repeat while(has more documents to tag);
+end
+@enduml

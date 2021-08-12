@@ -1,0 +1,47 @@
+@startuml
+
+boundary ECA as ECA
+participant DataResource as DR order 5
+participant CaseResource as CR order 6
+participant ResearchWorkspaceResource as RWR order 8
+participant DatasourceService as DS order 10
+participant ContentUpdater.TenantUpdater as TU order 20
+participant TaggingService as TS order 30
+boundary JobService as JSS order 100
+boundary ElasticQueryWorker as EQ order 110
+boundary ElasticIndexing as EI order 120
+boundary Elasticsearch as ES order 130
+
+ECA --> DR
+activate DS
+DR --> DS : createDataSource()
+ECA --> RWR
+RWR --> DS : createDataSource()
+ECA --> CR
+CR --> DS : createDataSource()
+activate TS
+TU -> TS : tagFamilies
+DS -> TS : tagFamilies()
+TS --> DS : getRepositoryIds()
+activate DS
+DS --> TS : repositoryIds
+deactivate DS
+TS --> TS : Build new Job
+note left
+Build job with datasource and repo getRepositoryIds
+as per Dermot's email
+end note
+TS --> JSS : Tag case and datasource in one job
+TS --> DS : add jobId
+deactivate TS
+JSS --> EQ : RabbitMQ
+activate EQ
+EQ --> ES : query docs
+ES --> EQ : docs if exists
+note left
+if no results will do nothing.
+end note
+EQ --> EI : RabbitMQ
+deactivate EQ
+EI --> ES : update vis Painless
+@enduml

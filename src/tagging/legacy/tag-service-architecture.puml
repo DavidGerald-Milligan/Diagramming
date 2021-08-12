@@ -1,0 +1,25 @@
+@startuml
+[Swagger UI] as SUI
+[Classification] as C
+[Tag Service] as TS
+[Application Resources] as AR
+[Search and Analytics] as SA
+[Job Service] as JS
+[Worker Elastic Indexing] as EI
+[Worker Elastic Query] as EQ
+[Elasticsearch] as ES
+
+C --> TS
+HTTP -d- SUI
+SUI --> TS
+TS --> AR : API
+TS --> SA : API
+TS --> JS : API
+JS --> EQ : RabbitMQ
+EQ --> EQ : Loop Back for 2nd Pass with new query
+EQ --> EI : RabbitMQ
+EI --> ES : API
+note left of ES
+  Tag applied by painless script
+end note
+@enduml

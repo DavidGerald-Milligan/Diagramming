@@ -1,0 +1,22 @@
+@startuml
+[Swagger UI] as SUI
+[Classification] as C
+[Tag Service] as TS
+[Tagging Service] as TNGS
+[Tagging Worker] as TW
+[Application Resources] as AR
+[Search and Analytics] as SA
+[Job Service] as JS
+[Elasticsearch] as ES
+
+HTTP -d- SUI
+C --> TS
+SUI --> TS
+TS -d-> SA : API
+TS -l-> TNGS : API
+TS -d-> AR : API
+TNGS -l-> JS : API
+JS -d-> TW : RabbitMQ
+TW -R-> SA : API
+SA --> ES : API
+@enduml

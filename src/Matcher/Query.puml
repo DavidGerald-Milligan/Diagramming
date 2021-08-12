@@ -1,0 +1,19 @@
+@startuml
+
+class MatcherQuery {
+    - MatcherQueryVisitor visitor
+    + boolean isMatch(document, Filter<MatcherFieldSpec> filter)
+}
+note right of MatcherQuery
+    The isMatch method takes a document,
+    and a filter.
+    
+    The MatcherQueryVisitor visits the filter.    
+       filter.accept(visitor);
+    So for a filter:
+        visitor -> visitor.visitEquals(MatcherFieldSpec, bool)
+    The filter matches the method signature in MatcherQueryVisitor.
+end note
+
+MatcherQuery *-- MatcherQueryVisitor
+@enduml

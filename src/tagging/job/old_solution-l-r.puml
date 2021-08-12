@@ -1,0 +1,12 @@
+@startuml
+scale 600 width
+(*) -r-> for each document to tag
+-r-> extract with ids from family id path
+-r-> for each id
+-d-> add tag
+-d-> send operation to Elasticsearch
+-u-> for each id
+"send operation to Elasticsearch" -d-> Elasticsearch
+--> (*)
+
+@enduml
