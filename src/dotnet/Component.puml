@@ -1,0 +1,32 @@
+@startuml
+
+
+    [sepg/sepg-dotnet-buildprocess pom.xml] as bp
+    [sepg/sample-dotnet-6] as sample
+    [nugetOutputFolder] as f
+    boundary jenkins_buildenv as image
+    boundary artifactory
+
+    note left of bp
+      Contains the dotnet executions
+      in a maven plugin.
+
+      restore
+      pack
+      etc
+
+      dotnet pack --> builds the .nupkg
+    end note
+
+    bp <-- sample: mvn compile
+
+    bp --> f: outputs .nupkg artifact
+
+    sample --> image: defines build image
+
+    image <-- f: .nupkg
+
+    image --> artifactory: nuget push *.nupkg
+
+
+@enduml

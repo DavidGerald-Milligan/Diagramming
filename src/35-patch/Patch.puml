@@ -1,0 +1,43 @@
+@startuml
+boundary Deploy3.5.4 order 1
+note right Deploy3.5.4
+Awaiting Signoff from DH
+end note
+
+boundary AJPService order 2
+note right AJPService
+Released 3.5.3-20
+end note
+
+boundary AppResourcesWorker order 10 #99FF99
+
+boundary JobService order 5
+note right JobService
+Released 3.1.0-17
+end note
+boundary AppResourcesWorker order 10 #99FF99
+
+boundary QueryWorker order 20  #99FF99
+
+boundary WorkerElastic order 27
+
+note right AppResourcesWorker
+Released 1.1.0-192
+end note
+
+note right QueryWorker
+Released 2.2.0-404
+end note
+
+boundary SearchAnalytics3.6 order 28
+participant SearchAnalytics4 order 29   #99FF99
+
+note right WorkerElastic
+Released 4.1.0-15
+end note
+WorkerElastic --> SearchAnalytics3.6: depends on
+note right SearchAnalytics3.6
+Released 3.6.0-6
+end note
+
+@enduml
